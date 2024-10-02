@@ -20,7 +20,9 @@ const userSchema = mongoose.Schema({
     type: String,
     enum: ['admin','user'],
     default: 'user'        
- }
+ },
+ isVerified: { type: Boolean, default: false }, 
+ verificationToken: { type: String } 
 });
 userSchema.plugin(mongoosePaginate);
 

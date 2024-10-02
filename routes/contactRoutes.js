@@ -7,27 +7,30 @@ const {
   putContact,
   deleteContact,
   allContacts,
-  deleteContactByAdmin
+  deleteContactByAdmin,
 } = require("../controllers/contactControllers");
-
+const isAdmin = require("../middleware/admin");
 const validateToken = require("../middleware/validateTokenHandler");
-const rbac = require('../middleware/rbac');
+const rbac = require("../middleware/rbac");
 
-router.get('/allcontacts',allContacts);
-
-// router.delete('/admin/id', deleteContactByAdmin);
-
-// Apply token validation to all routes
 router.use(validateToken);
 
+router
+  .route("/admin/:id")
+  .delete(rbac("delete", "contacts"), isAdmin, deleteContactByAdmin);
+router
+  .route("/allcontacts")
+  .get(rbac("read", "contacts"), isAdmin, allContacts);
 
-router.route('/')
-    .get(rbac('read', 'contacts'), getContact) 
-    .post(rbac('write', 'contacts'), postContact)
+router
+  .route("/")
+  .get(rbac("read", "contacts"), getContact)
+  .post(rbac("write", "contacts"), postContact);
 
-router.route('/:id')
-    .get(rbac('read', 'contacts'), getContactIndividual) 
-    .put(rbac('write', 'contacts'), putContact) 
-    .delete(rbac('delete', 'contacts'), deleteContact); 
+router
+  .route("/:id")
+  .get(rbac("read", "contacts"), getContactIndividual)
+  .put(rbac("write", "contacts"), putContact)
+  .delete(rbac("delete", "contacts"), deleteContact);
 
 module.exports = router;

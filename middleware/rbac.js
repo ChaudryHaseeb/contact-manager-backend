@@ -1,7 +1,9 @@
 const rbac = (action, resource) => {
     return (req, res, next) => {
         const userRole = req.user.role; 
-        console.log('role================',req.user.role)
+        // console.log('role================',req.user.role)
+        // console.log('Role:', userRole, 'Action:', action, 'Resource:', resource);
+
 
         const roles = {
             user: {
