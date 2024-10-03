@@ -16,8 +16,10 @@ router.post("/register", registerUser);
 router.get("/verify-token", verifyEmail);
 router.post("/login", loginUser);
 router.get("/current", validateToken, currentUser);
+
+//------------------------------ ADMIN ACCESSIBLE ROUTES -------------------------
+
 router.get("/allusers", validateToken, isAdmin, allUser);
 router.delete("/:_id", validateToken, isAdmin, deleteUser);
-// router.get('/admin',validateToken,isAdmin);
 
 module.exports = router;

@@ -12,9 +12,9 @@ const apiLimiter = rateLimiter({
   windowMs : 5 * 60 * 1000,
   max : 100,
   message : 'too many request from this ip address please try again after 5 mintues',
-})
+});
 
-app.use("/api", apiLimiter)
+app.use("/api", apiLimiter);
 app.use(cors({
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "DELETE", "PUT"],

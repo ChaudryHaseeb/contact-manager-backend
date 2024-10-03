@@ -13,7 +13,12 @@ const isAdmin = require("../middleware/admin");
 const validateToken = require("../middleware/validateTokenHandler");
 const rbac = require("../middleware/rbac");
 
+
+//------------------------------ IMPLEMENT TOKEN VALIDATION -------------------------
+
 router.use(validateToken);
+
+//------------------------------ ADMIN ACCESSIBLE ROUTES -------------------------
 
 router
   .route("/admin/:id")
@@ -21,6 +26,9 @@ router
 router
   .route("/allcontacts")
   .get(rbac("read", "contacts"), isAdmin, allContacts);
+
+  
+  //------------------------------ USER ACCESSIBLE ROUTES -------------------------
 
 router
   .route("/")

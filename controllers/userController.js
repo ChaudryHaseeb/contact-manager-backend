@@ -18,6 +18,8 @@ const transporter = NodeMailer.createTransport({
   },
 });
 
+//=============================== USER REGISTERATION API ========================================
+
 //@des register a user
 //@routes POST api/user/register
 //@access public
@@ -75,6 +77,9 @@ const registerUser = asyncHandler(async (req, res) => {
   res.status(201).json({message: "User registered! Check your email to verify your account.", });
 });
 
+
+//=============================== USER REGISTERATION API EMAIL VERIFICATION ========================================
+
 //@des verify email
 //@routes GET api/user/verify-email
 //@access public
@@ -94,6 +99,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Email verified successfully" });
 });
+
+//=============================== USER LOGIN API ========================================
+
 
 //@des login a user
 //@routes POST api/user/login
@@ -133,9 +141,12 @@ const loginUser = asyncHandler(async (req, res) => {
     { expiresIn: "1d" }
   );
 
-  user.verificationToken = undefined;
+  // user.verificationToken = undefined;
   res.status(200).json({ accessToken, user });
 });
+
+//=============================== USER CURRENT LOGIN API ========================================
+
 
 //@des current user information
 //@routes POST api/user/current
@@ -150,7 +161,9 @@ const currentUser = asyncHandler(
   }
 );
 
-//--------------------------------- Other ADMIN functions -------------------------------------------
+//--------------------------------- ADMIN CONTTROLLER -------------------------------------------
+
+//=============================== ADMIN GET API ALL USERS ========================================
 
 //@des all user information get by admin
 //@routes GET api/user/alluser
@@ -179,6 +192,9 @@ const allUser = asyncHandler(
     timestamp: true,
   }
 );
+
+//=============================== ADMIN DELETE API ALL USER ========================================
+
 
 //@des delete user by admin
 //@routes DELETE api/user/deleteuser
