@@ -82,17 +82,21 @@ const putContact = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Contact not found");
   }
-
+  
   if (contact.user_id.toString() !== req.user.id) {
+    console.log('Contact user_id:', contact.user_id);
+    console.log('Authenticated user_id:', req.user.id);
     res.status(403);
     throw new Error("user dont have permission to update other users contact");
   }
+  console.log('Request body: ', req.body);
 
   const updateContact = await Contact.findByIdAndUpdate(
     req.params.id,
     req.body,
-    { new: true }
+    { new: true, runValidators: true }
   );
+  console.log('updated Contact-------------', updateContact);
   res.send(updateContact);
 });
 
