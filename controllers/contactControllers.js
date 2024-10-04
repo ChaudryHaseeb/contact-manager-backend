@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Contact = require("../models/contactModel");
 
-//================================= USER CONTROLLER ======================================
+//================================= USER CONTACT CONTROLLER ======================================
 
 //------------------------------- USER GET API CONTACTS -----------------------------------
 
@@ -139,7 +139,7 @@ const allContacts = asyncHandler(async (req, res) => {
     const contacts = await Contact.find()
       .skip((page - 1) * limit)
       .limit(limit).populate("user_id")
-      console.log('contacts----------', contacts)
+      // console.log('contacts----------', contacts)
 
     const totalContacts = await Contact.countDocuments();
 
