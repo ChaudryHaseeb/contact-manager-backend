@@ -28,7 +28,7 @@ const forgotPassword = asyncHandler( async (req, res) =>{
 
         const resetToken = jwt.sign({id : user._id}, process.env.ACCESS_TOKEN_SECRET, { expiresIn : '1h'});
 
-        const resetURL = `http://localhost:3000/reset_password/${resetToken}`;
+        const resetURL = `http://localhost:3000/auth/reset_password/${resetToken}`;
         const message = `Click here to reset your password: ${resetURL}`;
 
         await Transporter.sendMail({

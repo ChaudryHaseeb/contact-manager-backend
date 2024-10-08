@@ -11,7 +11,7 @@ const rbac = (action, resource) => {
             },
             admin: {
                 contacts: ['read', 'write', 'delete'], 
-                allcontacts: ['read'], 
+                allcontacts: ['read'],
             },
         };
 

@@ -24,6 +24,7 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/contacts", require("./routes/contactRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/task", require('./routes/taskRoutes'));
 app.use(errorHandler);
 connectDb();
 
