@@ -23,6 +23,7 @@ const transporter = NodeMailer.createTransport({
 //@des register a user
 //@routes POST api/user/register
 //@access public
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, role } = req.body;
   if (!username || !email || !password) {
