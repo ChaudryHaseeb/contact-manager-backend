@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 
 const apiLimiter = rateLimiter({
   windowMs : 5 * 60 * 1000,
-  max : 100,
+  max : 1000,
   message : 'too many request from this ip address please try again after 5 mintues',
 });
 
