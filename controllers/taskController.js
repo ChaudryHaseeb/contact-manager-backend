@@ -171,8 +171,9 @@ const TotalTasksDetail =  asyncHandler( async(req, res )=>{
 
     const TotalTasks = task.length;
     const TotalPendingTasks = task.filter(task=> task.status === 'pending').length;
+    const TotalAssignedTasks = task.filter(task=> task.status === 'assigned').length;
     const TotalCompletedTasks = task.filter(task=> task.status === 'complete').length;
-    res.status(200).json({task, TotalTasks, TotalPendingTasks, TotalCompletedTasks});
+    res.status(200).json({task, TotalTasks, TotalPendingTasks, TotalCompletedTasks, TotalAssignedTasks});
   } catch (error) {
     console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});

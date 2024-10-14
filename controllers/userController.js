@@ -107,6 +107,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 //@des login a user
 //@routes POST api/user/login
 //@access public
+
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -179,8 +180,9 @@ const allUser = asyncHandler(
         .skip((page - 1) * limit)
         .limit(limit);
       const totalUsers = await User.countDocuments();
+      const allUsers = users.length;
       res.status(200).json({
-        users,
+        users, allUsers,
         totalPages: Math.ceil(totalUsers / limit),
         currentPage: page,
         message: "All users retrieved successfully",
