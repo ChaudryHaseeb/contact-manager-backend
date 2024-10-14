@@ -41,11 +41,13 @@ const AssignedTask = asyncHandler( async (req,res)=>{
 
 const GetAllUser = asyncHandler( async(req, res)=>{
   try {
-    const users = await User.find();
+    const user = await User.find();
 
-    if (!users) {
+    if (!user) {
         return res.status(404).json({error : ' user not find'});
     };
+
+    const users = user.filter(User=> User.role !== 'admin');
 
     res.status(200).json(users);
   } catch (error) {
@@ -69,12 +71,13 @@ const AdminViewTasks = asyncHandler(async(req, res)=>{
 
   try {
     
-    const userTask = await Task.find({});
+    const UserTask = await Task.find({});
 
-    if (!userTask || userTask.length === 0) {
+    if (!UserTask || UserTask.length === 0) {
       return res.status(404).json({message : ' User task is not found '});
     };
     // console.log('user tasks=========', userTask);
+    const userTask = UserTask.filter(task=> task.paymentStatus !== 'paid');
 
     res.status(200).json({userTask});
   } catch (error) {
@@ -135,7 +138,11 @@ const PaidByAdmin = asyncHandler(async (req, res) => {
 
 
 const TotalTasksPayment =  asyncHandler( async(req, res )=>{
+
+if (req.user.role === 'admin') {
+
   try {
+
     const task = await Task.find({});
 
     if (!task) {
@@ -146,11 +153,35 @@ const TotalTasksPayment =  asyncHandler( async(req, res )=>{
     const TotalAmountPaid = task.filter(task=> task.paymentStatus === 'paid').reduce((sum,task)=> sum + (task.amountPaid || task.hourlyRate), 0);
     const TotalAmountUnpaid = task.filter(task=> task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
     res.status(200).json({task, TotalAmount, TotalAmountPaid, TotalAmountUnpaid});
+
   } catch (error) {
-    console.log('Server Error',error);
+    // console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
-  });
+} else {
+
+  try {
+    // console.log('user role-------------------',req.user.role);
+    // console.log('user id-------------------',req.user.id);
+    const task = await Task.find({ assignedTo: req.user.id});
+    // console.log('usertask-------------------',task);
+
+    if (!task) {
+      return res.status(404).json({error : 'Failed to find the task'});
+    };
+
+    const TotalAmount = task.filter(task=> task.status === 'complete').reduce((sum,task)=> sum + task.hourlyRate +  task.amountPaid, 0);
+    const TotalAmountPaid = task.filter(task=> task.paymentStatus === 'paid').reduce((sum,task)=> sum + (task.amountPaid || task.hourlyRate), 0);
+    const TotalAmountUnpaid = task.filter(task=>   task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
+    res.status(200).json({task, TotalAmount, TotalAmountPaid, TotalAmountUnpaid});
+
+  } catch (error) {
+    // console.log('Server Error',error);
+    res.status(500).json({error : 'Server Error'});
+  }
+}
+});
+
 
 
 
@@ -162,6 +193,7 @@ const TotalTasksPayment =  asyncHandler( async(req, res )=>{
 
 
 const TotalTasksDetail =  asyncHandler( async(req, res )=>{
+if (req.user.role === 'admin') {
   try {
     const task = await Task.find({});
 
@@ -178,6 +210,25 @@ const TotalTasksDetail =  asyncHandler( async(req, res )=>{
     console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
+} else {
+  try {
+    const task = await Task.find({assignedTo : req.user.id});
+
+    if (!task) {
+      return res.status(404).json({error : 'Failed to find the task'});
+    };
+
+    const TotalTasks = task.length;
+    const TotalPendingTasks = task.filter(task=> task.status === 'pending').length;
+    const TotalAssignedTasks = task.filter(task=> task.status === 'assigned').length;
+    const TotalCompletedTasks = task.filter(task=> task.status === 'complete').length;
+    res.status(200).json({task, TotalTasks, TotalPendingTasks, TotalCompletedTasks, TotalAssignedTasks});
+  } catch (error) {
+    console.log('Server Error',error);
+    res.status(500).json({error : 'Server Error'});
+  }
+}
+
   });
 
 
@@ -198,12 +249,13 @@ const UserTasks = asyncHandler(async(req, res)=>{
     const userId =  req.user.id;
     // console.log('user=========',req.user)
     // console.log('userID=========',req.user.id);
-    const userTask = await Task.find({ assignedTo: userId }).populate( 'assignedTo');
+    const UserTask = await Task.find({ assignedTo: userId }).populate( 'assignedTo');
 
-    if (!userTask || userTask.length === 0) {
+    if (!UserTask || UserTask.length === 0) {
       return res.status(404).json({message : ' User task is not found '});
     };
     // console.log('user tasks=========', userTask);
+    const userTask = UserTask.filter(task => task.status !== 'complete');
 
     res.status(200).json({userTask});
   } catch (error) {

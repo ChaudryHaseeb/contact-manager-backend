@@ -176,7 +176,7 @@ const allUser = asyncHandler(
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     try {
-      const users = await User.find()
+      const users = await User.find({role : 'user'})
         .skip((page - 1) * limit)
         .limit(limit);
       const totalUsers = await User.countDocuments();
