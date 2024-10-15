@@ -27,7 +27,7 @@ router
   .route("/allcontacts")
   .get(rbac("read", "contacts"), isAdmin, allContacts);
 
-  
+
   //------------------------------ USER ACCESSIBLE ROUTES -------------------------
 
 router

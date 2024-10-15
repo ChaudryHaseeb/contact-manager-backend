@@ -9,8 +9,8 @@ const Transporter = NodeMailer.createTransport({
     port : 465,
     secure : true,
     auth : {
-       user :  process.env.EMAIL_USER,
-       pass :  process.env.EMAIL_PASS,
+        user :  process.env.EMAIL_USER,
+        pass :  process.env.EMAIL_PASS,
     },
 });
 
@@ -56,7 +56,6 @@ const resetPassword = asyncHandler( async(req, res )=>{
         const decoded = jwt.verify( token , process.env.ACCESS_TOKEN_SECRET );
         const user = await User.findById( decoded.id );
 
-        console.log('user----------', user);
 
         if (!user) {
             return res.status(400).send('User token is not valid');
@@ -68,10 +67,10 @@ const resetPassword = asyncHandler( async(req, res )=>{
         await user.save();
 
         res.status(200).send('Password reset successfull');
-        
+
     } catch (error) {
         res.status(404).send('Error in reseting password or invalid token');
     }
 })
- 
+
 module.exports = { forgotPassword, resetPassword };

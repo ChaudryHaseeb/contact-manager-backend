@@ -8,10 +8,11 @@ const crypto = require("crypto");
 require("dotenv").config();
 
 // Setup Nodemailer Transporter
+
 const transporter = NodeMailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465, 
-  secure: true, 
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -54,9 +55,8 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   // Send verification email
+
   const verificationLink = `${process.env.FRONTEND_URL}/verify-token?token=${verificationToken}&email=${email}`;
-  // console.log('send mail-----',process.env.FRONTEND_URL);
-  // console.log('link----------',verificationLink);
   await transporter.sendMail(
     {
       from: process.env.EMAIL_USER,
@@ -65,10 +65,8 @@ const registerUser = asyncHandler(async (req, res) => {
       html: `<h4>Verify your email</h4><p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
     }, (error, info) => {
       if (error) {
-        // console.error("Error sending email:", error); 
         return res.status(500).json({ message: "Error sending verification email." });
       } else {
-        // console.log("Email sent: " + info.response); 
         return res.status(201).json({message:"User registered! Check your email to verify your account.",
           });
       }
@@ -84,6 +82,8 @@ const registerUser = asyncHandler(async (req, res) => {
 //@des verify email
 //@routes GET api/user/verify-email
 //@access public
+
+
 const verifyEmail = asyncHandler(async (req, res) => {
   const { token, email } = req.query;
 
@@ -91,11 +91,10 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
   if (!user) {
 
-       return res.status(400).json({message : 'invalid email or token'}) 
- }
+    return res.status(400).json({message : 'invalid email or token'})
+}
 
   user.isVerified = true;
-  // user.verificationToken = undefined;
   await user.save();
 
   res.status(200).json({ message: "Email verified successfully" });
@@ -143,7 +142,6 @@ const loginUser = asyncHandler(async (req, res) => {
     { expiresIn: "1d" }
   );
 
-  // user.verificationToken = undefined;
   res.status(200).json({ accessToken, user });
 });
 
@@ -215,7 +213,6 @@ const deleteUser = asyncHandler(
     const deleteContacts = await Contact.deleteMany({
       user_id: req.params._id,
     });
-    // console.log('deleted all contacts', deleteContacts)
     return res.json({ message: "user deleted successfully", deleteContacts });
   },
   {

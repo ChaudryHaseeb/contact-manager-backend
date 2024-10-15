@@ -21,7 +21,6 @@ const AssignedTask = asyncHandler( async (req,res)=>{
         hourlyRate,
         description,
     });
-    // console.log('taskkk============',task);
     await task.save();
     res.status(201).json({message : 'Task assigned successfully', task});
   } catch (error) {
@@ -52,7 +51,6 @@ const GetAllUser = asyncHandler( async(req, res)=>{
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({message : 'Server Error'})
-    // console.log('error---------',error);
   }
 
 })
@@ -70,19 +68,17 @@ const GetAllUser = asyncHandler( async(req, res)=>{
 const AdminViewTasks = asyncHandler(async(req, res)=>{
 
   try {
-    
+
     const UserTask = await Task.find({});
 
     if (!UserTask || UserTask.length === 0) {
       return res.status(404).json({message : ' User task is not found '});
     };
-    // console.log('user tasks=========', userTask);
     const userTask = UserTask.filter(task=> task.paymentStatus !== 'paid');
 
     res.status(200).json({userTask});
   } catch (error) {
     res.status(500).json({ error : 'Server error'});
-    // console.log('Server Error====',error);
   };
 });
 
@@ -100,9 +96,7 @@ const AdminViewTasks = asyncHandler(async(req, res)=>{
 
 const PaidByAdmin = asyncHandler(async (req, res) => {
   try {
-          // console.log('task id==========',req.params.taskId);
           const task = await Task.findOne({ _id: req.params.taskId});
-          // console.log('task id==========',task);
 
       if (!task) {
           return res.status(404).json({ error: 'Task not found' });
@@ -119,7 +113,6 @@ const PaidByAdmin = asyncHandler(async (req, res) => {
       res.status(200).json(task);
 
   } catch (error) {
-      // console.error('Error confirming task:', error); 
       res.status(500).json({ error: 'Failed to confirm payment' });
   }
 });
@@ -155,28 +148,23 @@ if (req.user.role === 'admin') {
     res.status(200).json({task, TotalAmount, TotalAmountPaid, TotalAmountUnpaid});
 
   } catch (error) {
-    // console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
 } else {
 
   try {
-    // console.log('user role-------------------',req.user.role);
-    // console.log('user id-------------------',req.user.id);
     const task = await Task.find({ assignedTo: req.user.id});
-    // console.log('usertask-------------------',task);
 
     if (!task) {
       return res.status(404).json({error : 'Failed to find the task'});
     };
 
-    const TotalAmount = task.filter(task=> task.status === 'complete').reduce((sum,task)=> sum + task.hourlyRate +  task.amountPaid, 0);
+    const TotalAmount = task.filter(task=> task.status === 'complete').reduce((sum,task)=> sum + task.hourlyRate, 0);
     const TotalAmountPaid = task.filter(task=> task.paymentStatus === 'paid').reduce((sum,task)=> sum + (task.amountPaid || task.hourlyRate), 0);
-    const TotalAmountUnpaid = task.filter(task=>   task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
+    const TotalAmountUnpaid = task.filter(task=>task.status !== 'pending' && task.status !== 'assigned' &&   task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
     res.status(200).json({task, TotalAmount, TotalAmountPaid, TotalAmountUnpaid});
 
   } catch (error) {
-    // console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
 }
@@ -207,7 +195,6 @@ if (req.user.role === 'admin') {
     const TotalCompletedTasks = task.filter(task=> task.status === 'complete').length;
     res.status(200).json({task, TotalTasks, TotalPendingTasks, TotalCompletedTasks, TotalAssignedTasks});
   } catch (error) {
-    console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
 } else {
@@ -224,7 +211,6 @@ if (req.user.role === 'admin') {
     const TotalCompletedTasks = task.filter(task=> task.status === 'complete').length;
     res.status(200).json({task, TotalTasks, TotalPendingTasks, TotalCompletedTasks, TotalAssignedTasks});
   } catch (error) {
-    console.log('Server Error',error);
     res.status(500).json({error : 'Server Error'});
   }
 }
@@ -247,20 +233,16 @@ const UserTasks = asyncHandler(async(req, res)=>{
 
   try {
     const userId =  req.user.id;
-    // console.log('user=========',req.user)
-    // console.log('userID=========',req.user.id);
     const UserTask = await Task.find({ assignedTo: userId }).populate( 'assignedTo');
 
     if (!UserTask || UserTask.length === 0) {
       return res.status(404).json({message : ' User task is not found '});
     };
-    // console.log('user tasks=========', userTask);
     const userTask = UserTask.filter(task => task.status !== 'complete');
 
     res.status(200).json({userTask});
   } catch (error) {
     res.status(500).json({ error : 'Server error'});
-    // console.log('Server Error====',error);
   };
 });
 
@@ -292,7 +274,6 @@ const ConfirmedByUser = asyncHandler(async (req, res) => {
       res.status(200).json(task);
 
   } catch (error) {
-      // console.error('Error confirming task:', error); 
       res.status(500).json({ error: 'Failed to confirm task' });
   }
 });
@@ -340,7 +321,6 @@ const CompleteByUser = asyncHandler(async (req, res) => {
       res.status(200).json({task});
 
   } catch (error) {
-      console.error('Error complete task:', error);
       res.status(500).json({ error: 'Failed to complete task' });
   }
 });

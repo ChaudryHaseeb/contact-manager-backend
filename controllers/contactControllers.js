@@ -38,7 +38,6 @@ const getContact = asyncHandler(async (req, res) => {
 //@access private
 
 const postContact = asyncHandler(async (req, res) => {
-  // console.log("the user phone number is :", req.body);
   const { name, email, number } = req.body;
   if (!name || !email || !number) {
     res.status(400);
@@ -82,21 +81,17 @@ const putContact = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Contact not found");
   }
-  
+
   if (contact.user_id.toString() !== req.user.id) {
-    console.log('Contact user_id:', contact.user_id);
-    console.log('Authenticated user_id:', req.user.id);
     res.status(403);
     throw new Error("user dont have permission to update other users contact");
   }
-  console.log('Request body: ', req.body);
 
   const updateContact = await Contact.findByIdAndUpdate(
     req.params.id,
     req.body,
     { new: true, runValidators: true }
   );
-  console.log('updated Contact-------------', updateContact);
   res.send(updateContact);
 });
 
@@ -143,7 +138,6 @@ const allContacts = asyncHandler(async (req, res) => {
     const contacts = await Contact.find()
       .skip((page - 1) * limit)
       .limit(limit).populate("user_id")
-      // console.log('contacts----------', contacts)
 
     const totalContacts = await Contact.countDocuments();
 
@@ -166,15 +160,12 @@ const allContacts = asyncHandler(async (req, res) => {
 //@access private
 
 const deleteContactByAdmin = asyncHandler(async (req, res) => {
-  // console.log("Contact ID received:", req.params.id);
 
   const contact = await Contact.findById(req.params.id);
-  // console.log("contact------------", contact);
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
   }
-  // console.log("roleeeeeeee-----------", req.user.role);
   if (req.user.role === "admin") {
     const deleted = await Contact.findByIdAndDelete(req.params.id);
     return res.json({ message: "contact is deleted", deleted });

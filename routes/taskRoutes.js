@@ -1,7 +1,6 @@
 const express = require('express');
 const { AssignedTask, ConfirmedByUser, CompleteByUser, TotalTasksDetail, GetAllUser, UserTasks, AdminViewTasks, PaidByAdmin, TotalTasksPayment} = require('../controllers/taskController');
 const router = express.Router();
-// const isAdmin = require('../middleware/admin');
 const validateToken = require('../middleware/validateTokenHandler');
 
 
