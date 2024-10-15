@@ -142,9 +142,9 @@ if (req.user.role === 'admin') {
       return res.status(404).json({error : 'Failed to find the task'});
     };
 
-    const TotalAmount = task.reduce((sum,task)=> sum + task.hourlyRate +  task.amountPaid, 0);
+    const TotalAmount = task.filter(task=> task.status === 'complete').reduce((sum,task)=> sum + task.hourlyRate, 0);
     const TotalAmountPaid = task.filter(task=> task.paymentStatus === 'paid').reduce((sum,task)=> sum + (task.amountPaid || task.hourlyRate), 0);
-    const TotalAmountUnpaid = task.filter(task=> task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
+    const TotalAmountUnpaid = task.filter(task=>task.status === 'complete' && task.paymentStatus === 'unpaid').reduce((sum,task)=> sum + task.hourlyRate, 0);
     res.status(200).json({task, TotalAmount, TotalAmountPaid, TotalAmountUnpaid});
 
   } catch (error) {
@@ -215,7 +215,7 @@ if (req.user.role === 'admin') {
   }
 }
 
-  });
+});
 
 
 

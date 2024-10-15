@@ -18,7 +18,7 @@ const getContact = asyncHandler(async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-    const totalContacts = await Contact.countDocuments();
+    const totalContacts = await Contact.countDocuments({user_id : req.user.id});
 
     res.json({
       contacts,
