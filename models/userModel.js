@@ -23,6 +23,9 @@ role:{
 },
 isVerified: { type: Boolean, default: false },
 verificationToken: { type: String },
+},
+{
+    timestamps : true,
 });
 userSchema.plugin(mongoosePaginate);
 
