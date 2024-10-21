@@ -26,7 +26,8 @@ verificationToken: { type: String },
 },
 {
     timestamps : true,
-});
+},
+);
 userSchema.plugin(mongoosePaginate);
 
 

@@ -30,13 +30,13 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!username || !email || !password) {
     res.status(400);
     throw new Error("All fields are mandatory");
-  }
+  };
 
   const userAvailable = await User.findOne({ email });
   if (userAvailable) {
     res.status(400);
     throw new Error("User already registered");
-  }
+  };
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -69,7 +69,7 @@ const registerUser = asyncHandler(async (req, res) => {
       } else {
         return res.status(201).json({message:"User registered! Check your email to verify your account.",
           });
-      }
+      };
     }
   );
 
@@ -92,7 +92,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
   if (!user) {
 
     return res.status(400).json({message : 'invalid email or token'})
-}
+};
 
   user.isVerified = true;
   await user.save();
@@ -127,7 +127,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isMatch) {
     res.status(401);
     return res.json({ message: "Invalid password" });
-  }
+  };
 
   const accessToken = jwt.sign(
     {
@@ -158,7 +158,7 @@ const currentUser = asyncHandler(
   },
   {
     timestamp: true,
-  }
+  },
 );
 
 //--------------------------------- ADMIN CONTTROLLER -------------------------------------------
@@ -187,11 +187,11 @@ const allUser = asyncHandler(
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
-    }
+    };
   },
   {
     timestamp: true,
-  }
+  },
 );
 
 //=============================== ADMIN DELETE API ALL USER ========================================
@@ -207,7 +207,7 @@ const deleteUser = asyncHandler(
     if (!users) {
       res.status(404);
       throw new Error("user not found");
-    }
+    };
 
     await User.findByIdAndDelete(req.params._id);
     const deleteContacts = await Contact.deleteMany({
@@ -217,7 +217,7 @@ const deleteUser = asyncHandler(
   },
   {
     timestamp: true,
-  }
+  },
 );
 
 module.exports = {

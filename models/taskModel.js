@@ -1,4 +1,3 @@
-const { type } = require("express/lib/response");
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
@@ -62,6 +61,6 @@ const taskSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 module.exports = mongoose.model("Task", taskSchema);

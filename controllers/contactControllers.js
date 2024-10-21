@@ -27,7 +27,7 @@ const getContact = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  };
 });
 
 //------------------------------- USER POST API CONTACTS -----------------------------------
@@ -42,7 +42,7 @@ const postContact = asyncHandler(async (req, res) => {
   if (!name || !email || !number) {
     res.status(400);
     throw new Error("All fields are mendatory");
-  }
+  };
   const contact = await Contact.create({
     name,
     email,
@@ -64,7 +64,7 @@ const getContactIndividual = asyncHandler(async (req, res) => {
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
-  }
+  };
   res.send(contact);
 });
 
@@ -80,12 +80,12 @@ const putContact = asyncHandler(async (req, res) => {
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
-  }
+  };
 
   if (contact.user_id.toString() !== req.user.id) {
     res.status(403);
     throw new Error("user dont have permission to update other users contact");
-  }
+  };
 
   const updateContact = await Contact.findByIdAndUpdate(
     req.params.id,
@@ -108,14 +108,14 @@ const deleteContact = asyncHandler(async (req, res) => {
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
-  }
+  };
 
   if (req.user.id !== contact.user_id.toString()) {
     res.status(403);
     throw new Error(
       "User does not have permission to delete other users' contacts"
     );
-  }
+  };
 
   const deleted = await Contact.findByIdAndDelete(req.params.id);
   res.json({ message: "Contact deleted successfully", deleted });
@@ -137,7 +137,7 @@ const allContacts = asyncHandler(async (req, res) => {
   try {
     const contacts = await Contact.find()
       .skip((page - 1) * limit)
-      .limit(limit).populate("user_id")
+      .limit(limit).populate("user_id");
 
     const totalContacts = await Contact.countDocuments();
 
@@ -149,7 +149,7 @@ const allContacts = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  };
 });
 
 //------------------------------- ADMIN DELETE API ALL CONTACTS -----------------------------------
@@ -165,14 +165,14 @@ const deleteContactByAdmin = asyncHandler(async (req, res) => {
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
-  }
+  };
   if (req.user.role === "admin") {
     const deleted = await Contact.findByIdAndDelete(req.params.id);
     return res.json({ message: "contact is deleted", deleted });
   } else {
     res.status(403);
     throw new Error("You do not have permission to delete this contact.");
-  }
+  };
 });
 
 module.exports = {

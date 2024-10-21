@@ -59,7 +59,7 @@ const resetPassword = asyncHandler( async(req, res )=>{
 
         if (!user) {
             return res.status(400).send('User token is not valid');
-        }
+        };
 
         const hashedPassword = await bcrypt.hash( password, 10 );
 
@@ -70,7 +70,7 @@ const resetPassword = asyncHandler( async(req, res )=>{
 
     } catch (error) {
         res.status(404).send('Error in reseting password or invalid token');
-    }
-})
+    };
+});
 
 module.exports = { forgotPassword, resetPassword };

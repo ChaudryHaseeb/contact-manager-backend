@@ -42,6 +42,6 @@ const errorHandler = (err, req, res, next) => {
     default:
       console.log("all is good !");
       break;
-  }
+  };
 };
 module.exports = errorHandler;

@@ -50,8 +50,8 @@ const GetAllUser = asyncHandler( async(req, res)=>{
 
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({message : 'Server Error'})
-  }
+    res.status(500).json({message : 'Server Error'});
+  };
 
 });
 
@@ -100,7 +100,7 @@ const PaidByAdmin = asyncHandler(async (req, res) => {
 
       if (!task) {
           return res.status(404).json({ error: 'Task not found' });
-      }
+      };
 
       task.paidByAdmin = true;
       task.paymentStatus = 'paid';
@@ -114,7 +114,7 @@ const PaidByAdmin = asyncHandler(async (req, res) => {
 
   } catch (error) {
       res.status(500).json({ error: 'Failed to confirm payment' });
-  }
+  };
 });
 
 
@@ -149,7 +149,7 @@ if (req.user.role === 'admin') {
 
   } catch (error) {
     res.status(500).json({error : 'Server Error'});
-  }
+  };
 } else {
 
   try {
@@ -166,7 +166,7 @@ if (req.user.role === 'admin') {
 
   } catch (error) {
     res.status(500).json({error : 'Server Error'});
-  }
+  };
 }
 });
 
@@ -262,11 +262,11 @@ const ConfirmedByUser = asyncHandler(async (req, res) => {
 
       if (!task) {
           return res.status(404).json({ error: 'Task not found' });
-      }
+      };
 
       task.completionConfirmedByUser = true;
       task.status = 'pending';
-      task.starttime = new Date()
+      task.starttime = new Date();
 
 
       await task.save();
@@ -275,7 +275,7 @@ const ConfirmedByUser = asyncHandler(async (req, res) => {
 
   } catch (error) {
       res.status(500).json({ error: 'Failed to confirm task' });
-  }
+  };
 });
 
 
@@ -295,11 +295,11 @@ const CompleteByUser = asyncHandler(async (req, res) => {
 
       if (!task) {
           return res.status(404).json({ error: 'Task not found' });
-      }
+      };
 
       if (task.status !== 'pending') {
         return res.status(400).json({ message: "Task cannot be completed" });
-      }
+      };
 
       task.endTime = new Date();
       task.completeAt = task.endTime;
@@ -311,7 +311,7 @@ const CompleteByUser = asyncHandler(async (req, res) => {
         task.totalHours = hoursWorked;
       } else {
         task.totalHours = 0;
-      }
+      };
 
       task.amountPaid = task.totalHours * task.hourlyRate;
 
@@ -322,7 +322,7 @@ const CompleteByUser = asyncHandler(async (req, res) => {
 
   } catch (error) {
       res.status(500).json({ error: 'Failed to complete task' });
-  }
+  };
 });
 
 

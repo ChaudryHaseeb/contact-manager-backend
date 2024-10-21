@@ -12,10 +12,9 @@ const rbac = (action, resource) => {
             },
         };
 
-
         if (!roles[userRole] || !roles[userRole][resource] || !roles[userRole][resource].includes(action)) {
             return res.status(403).json({ message: 'Access denied' });
-        }
+        };
 
         next();
     };
